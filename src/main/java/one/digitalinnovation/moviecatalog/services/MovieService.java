@@ -56,4 +56,12 @@ public class MovieService {
         return movieMapper.toDTO(savedMovie);
 
     }
+
+    public void deleteById(Long id) throws MovieNotFoudException {
+        Movie movie = movieRepository.findById(id)
+                .orElseThrow(() -> new MovieNotFoudException(id));
+
+        movieRepository.delete(movie);
+
+    }
 }
