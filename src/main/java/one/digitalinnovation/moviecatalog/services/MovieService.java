@@ -2,7 +2,7 @@ package one.digitalinnovation.moviecatalog.services;
 
 import lombok.AllArgsConstructor;
 import one.digitalinnovation.moviecatalog.exceptions.MovieAlreadyRegisteredException;
-import one.digitalinnovation.moviecatalog.exceptions.MovieNotFoudException;
+import one.digitalinnovation.moviecatalog.exceptions.MovieNotFoundException;
 import one.digitalinnovation.moviecatalog.mappers.MovieMapper;
 import one.digitalinnovation.moviecatalog.models.DTO.MovieDTO;
 import one.digitalinnovation.moviecatalog.models.entitys.Movie;
@@ -41,19 +41,19 @@ public class MovieService {
 
     }
 
-    public MovieDTO findByName(String name) throws MovieNotFoudException {
+    public MovieDTO findByName(String name) throws MovieNotFoundException {
 
         Movie foundMovie = movieRepository.findByName(name)
-                .orElseThrow(() -> new MovieNotFoudException(name));
+                .orElseThrow(() -> new MovieNotFoundException(name));
 
         return movieMapper.toDTO(foundMovie);
 
     }
 
-    public MovieDTO updateMovie(Long id, MovieDTO movieDTO) throws MovieNotFoudException {
+    public MovieDTO updateMovie(Long id, MovieDTO movieDTO) throws MovieNotFoundException {
 
         movieRepository.findById(id)
-                .orElseThrow(() -> new MovieNotFoudException(id));
+                .orElseThrow(() -> new MovieNotFoundException(id));
 
         Movie movie = movieMapper.toModel(movieDTO);
         Movie savedMovie = movieRepository.save(movie);
@@ -61,10 +61,10 @@ public class MovieService {
 
     }
 
-    public void deleteById(Long id) throws MovieNotFoudException {
+    public void deleteById(Long id) throws MovieNotFoundException {
 
         Movie movie = movieRepository.findById(id)
-                .orElseThrow(() -> new MovieNotFoudException(id));
+                .orElseThrow(() -> new MovieNotFoundException(id));
 
         movieRepository.delete(movie);
 

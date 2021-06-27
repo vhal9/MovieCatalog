@@ -2,7 +2,7 @@ package one.digitalinnovation.moviecatalog.controllers;
 
 import one.digitalinnovation.moviecatalog.exceptions.ApiError;
 import one.digitalinnovation.moviecatalog.exceptions.MovieAlreadyRegisteredException;
-import one.digitalinnovation.moviecatalog.exceptions.MovieNotFoudException;
+import one.digitalinnovation.moviecatalog.exceptions.MovieNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -16,9 +16,9 @@ import java.util.stream.Collectors;
 @RestControllerAdvice
 public class ApplicationControllerAdvice {
 
-    @ExceptionHandler(MovieNotFoudException.class)
+    @ExceptionHandler(MovieNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ApiError handleMovieNotFoundException(MovieNotFoudException ex) {
+    public ApiError handleMovieNotFoundException(MovieNotFoundException ex) {
 
         return new ApiError(ex.getMessage());
 

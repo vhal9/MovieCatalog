@@ -2,7 +2,7 @@ package one.digitalinnovation.moviecatalog.services;
 
 import one.digitalinnovation.moviecatalog.builder.MovieDTOBuilder;
 import one.digitalinnovation.moviecatalog.exceptions.MovieAlreadyRegisteredException;
-import one.digitalinnovation.moviecatalog.exceptions.MovieNotFoudException;
+import one.digitalinnovation.moviecatalog.exceptions.MovieNotFoundException;
 import one.digitalinnovation.moviecatalog.mappers.MovieMapper;
 import one.digitalinnovation.moviecatalog.models.DTO.MovieDTO;
 import one.digitalinnovation.moviecatalog.models.entitys.Movie;
@@ -72,7 +72,7 @@ public class MovieServiceTest {
     }
 
     @Test
-    void whenValidMovieNameIsGivenThenReturnAMovie() throws MovieNotFoudException {
+    void whenValidMovieNameIsGivenThenReturnAMovie() throws MovieNotFoundException {
 
         // given
         MovieDTO expectedFoundMovieDTO = MovieDTOBuilder.builder().build().toMovieDTO();
@@ -89,7 +89,7 @@ public class MovieServiceTest {
     }
 
     @Test
-    void whenNotRegisteredMovieNameIsGivenThenThrownAnException() throws MovieNotFoudException {
+    void whenNotRegisteredMovieNameIsGivenThenThrownAnException() throws MovieNotFoundException {
 
         // given
         MovieDTO expectedFoundMovieDTO = MovieDTOBuilder.builder().build().toMovieDTO();
@@ -98,7 +98,7 @@ public class MovieServiceTest {
         when(movieRepository.findByName(expectedFoundMovieDTO.getName())).thenReturn(Optional.empty());
 
         // then
-        assertThrows(MovieNotFoudException.class, () -> movieService.findByName(expectedFoundMovieDTO.getName()));
+        assertThrows(MovieNotFoundException.class, () -> movieService.findByName(expectedFoundMovieDTO.getName()));
 
     }
 
@@ -134,7 +134,7 @@ public class MovieServiceTest {
     }
 
     @Test
-    void whenExclusionIsCalledWithValidIdThenAMovieShouldBeDeleted() throws MovieNotFoudException {
+    void whenExclusionIsCalledWithValidIdThenAMovieShouldBeDeleted() throws MovieNotFoundException {
 
         //given
         MovieDTO expectedDeleteMovieDTO = MovieDTOBuilder.builder().build().toMovieDTO();
@@ -153,18 +153,18 @@ public class MovieServiceTest {
     }
 
     @Test
-    void whenExclusionIsCalledWithInvalidIdThenThrownAnException() throws MovieNotFoudException {
+    void whenExclusionIsCalledWithInvalidIdThenThrownAnException() throws MovieNotFoundException {
 
         //when
         when(movieRepository.findById(INVALID_MOVIE_ID)).thenReturn(Optional.empty());
 
         //then
-        assertThrows(MovieNotFoudException.class, () -> movieService.deleteById(INVALID_MOVIE_ID));
+        assertThrows(MovieNotFoundException.class, () -> movieService.deleteById(INVALID_MOVIE_ID));
 
     }
 
     @Test
-    void whenUpdateIsCalledWithValidIdThenMovieShouldBeUpdated() throws MovieNotFoudException {
+    void whenUpdateIsCalledWithValidIdThenMovieShouldBeUpdated() throws MovieNotFoundException {
 
         //given
         MovieDTO expectedMovieDTO = MovieDTOBuilder.builder().build().toMovieDTO();
@@ -191,7 +191,7 @@ public class MovieServiceTest {
         when(movieRepository.findById(INVALID_MOVIE_ID)).thenReturn(Optional.empty());
 
         //then
-        assertThrows(MovieNotFoudException.class, () -> movieService.updateMovie(INVALID_MOVIE_ID, expectedMovieDTO));
+        assertThrows(MovieNotFoundException.class, () -> movieService.updateMovie(INVALID_MOVIE_ID, expectedMovieDTO));
 
     }
 

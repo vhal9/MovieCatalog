@@ -1,8 +1,7 @@
 package one.digitalinnovation.moviecatalog.controllers;
 
 import one.digitalinnovation.moviecatalog.builder.MovieDTOBuilder;
-import one.digitalinnovation.moviecatalog.exceptions.MovieAlreadyRegisteredException;
-import one.digitalinnovation.moviecatalog.exceptions.MovieNotFoudException;
+import one.digitalinnovation.moviecatalog.exceptions.MovieNotFoundException;
 import one.digitalinnovation.moviecatalog.models.DTO.MovieDTO;
 import one.digitalinnovation.moviecatalog.services.MovieService;
 import org.junit.jupiter.api.BeforeEach;
@@ -14,7 +13,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.servlet.view.json.MappingJackson2JsonView;
 

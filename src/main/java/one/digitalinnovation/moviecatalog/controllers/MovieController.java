@@ -2,10 +2,9 @@ package one.digitalinnovation.moviecatalog.controllers;
 
 import lombok.AllArgsConstructor;
 import one.digitalinnovation.moviecatalog.exceptions.MovieAlreadyRegisteredException;
-import one.digitalinnovation.moviecatalog.exceptions.MovieNotFoudException;
+import one.digitalinnovation.moviecatalog.exceptions.MovieNotFoundException;
 import one.digitalinnovation.moviecatalog.models.DTO.MovieDTO;
 import one.digitalinnovation.moviecatalog.services.MovieService;
-import org.apache.catalina.LifecycleState;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -36,14 +35,14 @@ public class MovieController {
     }
 
     @GetMapping("/{name}")
-    public MovieDTO findByName(@PathVariable String name) throws MovieNotFoudException {
+    public MovieDTO findByName(@PathVariable String name) throws MovieNotFoundException {
 
         return movieService.findByName(name);
 
     }
 
     @PutMapping("/{id}")
-    public MovieDTO updateMovie(@PathVariable Long id, @RequestBody @Valid MovieDTO movieDTO) throws MovieNotFoudException {
+    public MovieDTO updateMovie(@PathVariable Long id, @RequestBody @Valid MovieDTO movieDTO) throws MovieNotFoundException {
 
         return movieService.updateMovie(id, movieDTO);
 
@@ -51,7 +50,7 @@ public class MovieController {
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteById(@PathVariable Long id) throws MovieNotFoudException {
+    public void deleteById(@PathVariable Long id) throws MovieNotFoundException {
 
         movieService.deleteById(id);
 
