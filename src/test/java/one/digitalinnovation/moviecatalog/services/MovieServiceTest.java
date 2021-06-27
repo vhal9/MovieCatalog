@@ -17,10 +17,10 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.Optional;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.*;
 import static org.hamcrest.core.Is.is;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class MovieServiceTest {
@@ -68,5 +68,36 @@ public class MovieServiceTest {
         assertThrows(MovieAlreadyRegisteredException.class, () -> movieService.createMovie(expectedMovieDTO));
 
     }
-    
+
+    @Test
+    void whenValidMovieNameIsGivenThenReturnAMovie() throws MovieNotFoudException {
+
+        // given
+        MovieDTO expectedFoundMovieDTO = MovieDTOBuilder.builder().build().toMovieDTO();
+        Movie expectedFoundMovie = movieMapper.toModel(expectedFoundMovieDTO);
+
+        // when
+        when(movieRepository.findByName(expectedFoundMovie.getName())).thenReturn(Optional.of(expectedFoundMovie));
+
+        // then
+        MovieDTO foundMovieDTO = movieService.findByName(expectedFoundMovie.getName());
+
+        assertThat(foundMovieDTO, Matchers.is(equalTo(expectedFoundMovieDTO)));
+
+    }
+
+    @Test
+    void whenNotRegisteredMovieNameIsGivenThenThrownAnException() throws MovieNotFoudException {
+
+        // given
+        MovieDTO expectedFoundMovieDTO = MovieDTOBuilder.builder().build().toMovieDTO();
+
+        // when
+        when(movieRepository.findByName(expectedFoundMovieDTO.getName())).thenReturn(Optional.empty());
+
+        // then
+        assertThrows(MovieNotFoudException.class, () -> movieService.findByName(expectedFoundMovieDTO.getName()));
+
+    }
+
 }

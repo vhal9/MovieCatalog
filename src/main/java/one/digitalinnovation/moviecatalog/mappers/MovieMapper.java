@@ -14,6 +14,7 @@ public interface MovieMapper {
     @Mapping(target = "releaseDate", source = "releaseDate", dateFormat = "dd-MM-yyyy")
     Movie toModel(MovieDTO movieDTO);
 
+    @Mapping(target = "releaseDate", source = "releaseDate", dateFormat = "dd-MM-yyyy")
     MovieDTO toDTO(Movie movie);
 
 }
