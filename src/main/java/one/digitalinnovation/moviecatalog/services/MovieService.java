@@ -58,6 +58,7 @@ public class MovieService {
     }
 
     public void deleteById(Long id) throws MovieNotFoudException {
+
         Movie movie = movieRepository.findById(id)
                 .orElseThrow(() -> new MovieNotFoudException(id));
 
