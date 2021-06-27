@@ -45,4 +45,15 @@ public class MovieService {
         return movieMapper.toDTO(foundMovie);
 
     }
+
+    public MovieDTO updateMovie(Long id, MovieDTO movieDTO) throws MovieNotFoudException {
+
+        movieRepository.findById(id)
+                .orElseThrow(() -> new MovieNotFoudException(id));
+
+        Movie movie = movieMapper.toModel(movieDTO);
+        Movie savedMovie = movieRepository.save(movie);
+        return movieMapper.toDTO(savedMovie);
+
+    }
 }
