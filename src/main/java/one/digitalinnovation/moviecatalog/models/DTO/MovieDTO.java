@@ -12,6 +12,7 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
 
@@ -23,8 +24,8 @@ public class MovieDTO {
 
     private Long id;
 
-    @NotNull
-    @Size(min = 1, max = 60)
+    @NotEmpty(message = "Name field is required")
+    @Size(min = 2, max = 60, message = "Name field must be between 2 and 60")
     private String name;
 
     @Enumerated(EnumType.STRING)
@@ -32,11 +33,11 @@ public class MovieDTO {
     private Genre genre;
 
     @NotNull
-    @Min(0)
-    @Max(100)
+    @Min(value = 0,message = "Rate field must greater than or equal to 0")
+    @Max(value= 100, message = "Rate field less than or equal to 100")
     private int rate;
 
-    @NotNull
+    @NotEmpty(message = "Release Date field is required")
     private String releaseDate;
 
 }

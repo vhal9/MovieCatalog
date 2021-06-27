@@ -42,7 +42,7 @@ public class MovieController {
     }
 
     @PutMapping("/{id}")
-    public MovieDTO updateMovie(@PathVariable Long id, @RequestBody MovieDTO movieDTO) throws MovieNotFoudException {
+    public MovieDTO updateMovie(@PathVariable Long id, @RequestBody @Valid MovieDTO movieDTO) throws MovieNotFoudException {
 
         return movieService.updateMovie(id, movieDTO);
 
