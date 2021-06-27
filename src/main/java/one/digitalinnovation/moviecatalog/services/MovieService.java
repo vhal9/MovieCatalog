@@ -25,5 +25,14 @@ public class MovieService {
         return movieMapper.toDTO(savedMovie);
 
     }
-    
+
+    public List<MovieDTO> listMovies() {
+
+        List<Movie> allMovies = movieRepository.findAll();
+
+        return allMovies.stream()
+                .map(movieMapper::toDTO)
+                .collect(Collectors.toList());
+
+    }
 }

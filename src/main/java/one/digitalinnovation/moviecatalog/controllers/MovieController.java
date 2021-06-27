@@ -26,4 +26,11 @@ public class MovieController {
 
     }
 
+    @GetMapping
+    public List<MovieDTO> listMovies() {
+
+        return movieService.listMovies();
+
+    }
+
 }
