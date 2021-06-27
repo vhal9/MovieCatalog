@@ -133,4 +133,34 @@ public class MovieServiceTest {
 
     }
 
+    @Test
+    void whenExclusionIsCalledWithValidIdThenAMovieShouldBeDeleted() throws MovieNotFoudException {
+
+        //given
+        MovieDTO expectedDeleteMovieDTO = MovieDTOBuilder.builder().build().toMovieDTO();
+        Movie expectedDeleteMovie = movieMapper.toModel(expectedDeleteMovieDTO);
+
+        //when
+        when(movieRepository.findById(expectedDeleteMovieDTO.getId())).thenReturn(Optional.of(expectedDeleteMovie));
+        doNothing().when(movieRepository).delete(expectedDeleteMovie);
+
+        //then
+        movieService.deleteById(expectedDeleteMovieDTO.getId());
+
+        verify(movieRepository, times(1)).findById(expectedDeleteMovieDTO.getId());
+        verify(movieRepository, times(1)).delete(expectedDeleteMovie);
+
+    }
+
+    @Test
+    void whenExclusionIsCalledWithInvalidIdThenThrownAnException() throws MovieNotFoudException {
+
+        //when
+        when(movieRepository.findById(INVALID_MOVIE_ID)).thenReturn(Optional.empty());
+
+        //then
+        assertThrows(MovieNotFoudException.class, () -> movieService.deleteById(INVALID_MOVIE_ID));
+
+    }
+
 }
