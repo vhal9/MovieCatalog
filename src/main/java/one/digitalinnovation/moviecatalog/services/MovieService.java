@@ -1,6 +1,7 @@
 package one.digitalinnovation.moviecatalog.services;
 
 import lombok.AllArgsConstructor;
+import one.digitalinnovation.moviecatalog.exceptions.MovieNotFoudException;
 import one.digitalinnovation.moviecatalog.mappers.MovieMapper;
 import one.digitalinnovation.moviecatalog.models.DTO.MovieDTO;
 import one.digitalinnovation.moviecatalog.models.entitys.Movie;
@@ -33,6 +34,15 @@ public class MovieService {
         return allMovies.stream()
                 .map(movieMapper::toDTO)
                 .collect(Collectors.toList());
+
+    }
+
+    public MovieDTO findByName(String name) throws MovieNotFoudException {
+
+        Movie foundMovie = movieRepository.findByName(name)
+                .orElseThrow(() -> new MovieNotFoudException(name));
+
+        return movieMapper.toDTO(foundMovie);
 
     }
 }

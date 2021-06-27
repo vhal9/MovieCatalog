@@ -1,6 +1,7 @@
 package one.digitalinnovation.moviecatalog.controllers;
 
 import lombok.AllArgsConstructor;
+import one.digitalinnovation.moviecatalog.exceptions.MovieNotFoudException;
 import one.digitalinnovation.moviecatalog.models.DTO.MovieDTO;
 import one.digitalinnovation.moviecatalog.services.MovieService;
 import org.apache.catalina.LifecycleState;
@@ -30,6 +31,13 @@ public class MovieController {
     public List<MovieDTO> listMovies() {
 
         return movieService.listMovies();
+
+    }
+
+    @GetMapping("/{name}")
+    public MovieDTO findByName(@PathVariable String name) throws MovieNotFoudException {
+
+        return movieService.findByName(name);
 
     }
 
