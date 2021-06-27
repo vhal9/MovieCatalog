@@ -16,6 +16,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.servlet.view.json.MappingJackson2JsonView;
 
+import java.util.Collections;
+
 import static one.digitalinnovation.moviecatalog.utils.JsonConvertionUtils.asJsonString;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.when;
@@ -116,6 +118,41 @@ public class MovieControllerTest {
         mockMvc.perform(get(MOVIE_API_URL_PATH + "/" + movieDTO.getName())
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound());
+
+    }
+
+    @Test
+    void whenGETListWithMovieIsCalledThenOkStatusIsReturned() throws Exception {
+
+        //given
+        MovieDTO movieDTO = MovieDTOBuilder.builder().build().toMovieDTO();
+
+        //when
+        when(movieService.listMovies()).thenReturn(Collections.singletonList(movieDTO));
+
+        //then
+        mockMvc.perform(get(MOVIE_API_URL_PATH )
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].name", is(movieDTO.getName())))
+                .andExpect(jsonPath("$[0].rate", is(movieDTO.getRate())))
+                .andExpect(jsonPath("$[0].releaseDate", is(movieDTO.getReleaseDate())));
+
+    }
+
+    @Test
+    void whenGETListWithoutMovieIsCalledThenOkStatusIsReturned() throws Exception {
+
+        //given
+        MovieDTO movieDTO = MovieDTOBuilder.builder().build().toMovieDTO();
+
+        //when
+        when(movieService.listMovies()).thenReturn(Collections.emptyList());
+
+        //then
+        mockMvc.perform(get(MOVIE_API_URL_PATH )
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
 
     }
 
