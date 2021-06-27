@@ -163,4 +163,36 @@ public class MovieServiceTest {
 
     }
 
+    @Test
+    void whenUpdateIsCalledWithValidIdThenMovieShouldBeUpdated() throws MovieNotFoudException {
+
+        //given
+        MovieDTO expectedMovieDTO = MovieDTOBuilder.builder().build().toMovieDTO();
+        Movie expectedUpdatedMovie = movieMapper.toModel(expectedMovieDTO);
+
+        //when
+        when(movieRepository.findById(expectedMovieDTO.getId())).thenReturn(Optional.of(expectedUpdatedMovie));
+        when(movieRepository.save(expectedUpdatedMovie)).thenReturn(expectedUpdatedMovie);
+
+        //then
+        MovieDTO updatedMovieDTO = movieService.updateMovie(expectedMovieDTO.getId(), expectedMovieDTO);
+
+        assertThat(updatedMovieDTO, Matchers.is(equalTo(expectedMovieDTO)));
+
+    }
+
+    @Test
+    void whenUpdateIsCalledWithInvalidIdThenThrowAnException() {
+
+        //given
+        MovieDTO expectedMovieDTO = MovieDTOBuilder.builder().build().toMovieDTO();
+
+        //when
+        when(movieRepository.findById(INVALID_MOVIE_ID)).thenReturn(Optional.empty());
+
+        //then
+        assertThrows(MovieNotFoudException.class, () -> movieService.updateMovie(INVALID_MOVIE_ID, expectedMovieDTO));
+
+    }
+
 }
