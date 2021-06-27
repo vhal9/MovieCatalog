@@ -23,6 +23,7 @@ import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -156,4 +157,40 @@ public class MovieControllerTest {
 
     }
 
+    @Test
+    void whenPutIsCalledWithRegisteredMovieThenAMovieIsReturned() throws Exception {
+
+        //given
+        MovieDTO movieDTO = MovieDTOBuilder.builder().build().toMovieDTO();
+
+        //when
+        when(movieService.updateMovie(movieDTO.getId(), movieDTO)).thenReturn(movieDTO);
+
+        //then
+        mockMvc.perform(put(MOVIE_API_URL_PATH + "/" + movieDTO.getId())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(movieDTO)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.name", is(movieDTO.getName())))
+                .andExpect(jsonPath("$.rate", is(movieDTO.getRate())))
+                .andExpect(jsonPath("$.releaseDate", is(movieDTO.getReleaseDate())));
+
+    }
+
+    @Test
+    void whenPutIsCalledWithoutARegisteredMovieThenAnErrorIsReturned() throws Exception {
+
+        //given
+        MovieDTO movieDTO = MovieDTOBuilder.builder().build().toMovieDTO();
+
+        //when
+        when(movieService.updateMovie(movieDTO.getId(), movieDTO)).thenThrow(MovieNotFoundException.class);
+
+        //then
+        mockMvc.perform(put(MOVIE_API_URL_PATH + "/" + movieDTO.getId())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(movieDTO)))
+                .andExpect(status().isNotFound());
+
+    }
 }
