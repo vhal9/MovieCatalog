@@ -20,10 +20,8 @@ import java.util.Collections;
 
 import static one.digitalinnovation.moviecatalog.utils.JsonConvertionUtils.asJsonString;
 import static org.hamcrest.Matchers.is;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -190,6 +188,35 @@ public class MovieControllerTest {
         mockMvc.perform(put(MOVIE_API_URL_PATH + "/" + movieDTO.getId())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(asJsonString(movieDTO)))
+                .andExpect(status().isNotFound());
+
+    }
+
+    @Test
+    void whenDeleteIsCalledWithValidIdThenNoContentStatusIsReturned() throws Exception {
+
+        //given
+        MovieDTO movieDTO = MovieDTOBuilder.builder().build().toMovieDTO();
+
+        //when
+        doNothing().when(movieService).deleteById(movieDTO.getId());
+
+        //then
+        mockMvc.perform(delete(MOVIE_API_URL_PATH + "/" + movieDTO.getId())
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNoContent());
+
+    }
+
+    @Test
+    void whenDeleteIsCalledWithInvalidIdThenNotFoundStatusIsReturned() throws Exception {
+
+        //when
+        doThrow(MovieNotFoundException.class).when(movieService).deleteById(INVALID_MOVIE_ID);
+
+        //then
+        mockMvc.perform(delete(MOVIE_API_URL_PATH + "/" + INVALID_MOVIE_ID)
+                .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound());
 
     }
