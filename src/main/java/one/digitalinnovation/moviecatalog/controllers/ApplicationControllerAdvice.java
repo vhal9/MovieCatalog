@@ -1,6 +1,7 @@
 package one.digitalinnovation.moviecatalog.controllers;
 
 import one.digitalinnovation.moviecatalog.exceptions.ApiError;
+import one.digitalinnovation.moviecatalog.exceptions.MovieAlreadyRegisteredException;
 import one.digitalinnovation.moviecatalog.exceptions.MovieNotFoudException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -33,6 +34,14 @@ public class ApplicationControllerAdvice {
                 .collect(Collectors.toList());
 
         return new ApiError(erros);
+
+    }
+
+    @ExceptionHandler(MovieAlreadyRegisteredException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ApiError handleMovieAlreadyRegisteredException(MovieAlreadyRegisteredException ex) {
+
+        return new ApiError(ex.getMessage());
 
     }
 

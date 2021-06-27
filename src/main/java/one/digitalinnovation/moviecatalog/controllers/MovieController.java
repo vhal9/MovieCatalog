@@ -1,6 +1,7 @@
 package one.digitalinnovation.moviecatalog.controllers;
 
 import lombok.AllArgsConstructor;
+import one.digitalinnovation.moviecatalog.exceptions.MovieAlreadyRegisteredException;
 import one.digitalinnovation.moviecatalog.exceptions.MovieNotFoudException;
 import one.digitalinnovation.moviecatalog.models.DTO.MovieDTO;
 import one.digitalinnovation.moviecatalog.services.MovieService;
@@ -21,7 +22,7 @@ public class MovieController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public MovieDTO createMovie(@RequestBody @Valid MovieDTO movieDTO) {
+    public MovieDTO createMovie(@RequestBody @Valid MovieDTO movieDTO) throws MovieAlreadyRegisteredException {
 
         return movieService.createMovie(movieDTO);
 

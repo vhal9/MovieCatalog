@@ -1,6 +1,7 @@
 package one.digitalinnovation.moviecatalog.services;
 
 import lombok.AllArgsConstructor;
+import one.digitalinnovation.moviecatalog.exceptions.MovieAlreadyRegisteredException;
 import one.digitalinnovation.moviecatalog.exceptions.MovieNotFoudException;
 import one.digitalinnovation.moviecatalog.mappers.MovieMapper;
 import one.digitalinnovation.moviecatalog.models.DTO.MovieDTO;
@@ -10,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -19,7 +21,9 @@ public class MovieService {
     private final MovieRepository movieRepository;
     private final MovieMapper movieMapper = MovieMapper.INSTANCE;
 
-    public MovieDTO createMovie(MovieDTO movieDTO) {
+    public MovieDTO createMovie(MovieDTO movieDTO) throws MovieAlreadyRegisteredException {
+
+        verifyIfIsAlreadyRegistered(movieDTO.getName());
 
         Movie movie = movieMapper.toModel(movieDTO);
         Movie savedMovie = movieRepository.save(movie);
@@ -64,5 +68,12 @@ public class MovieService {
 
         movieRepository.delete(movie);
 
+    }
+
+    private void verifyIfIsAlreadyRegistered(String name) throws MovieAlreadyRegisteredException {
+        Optional<Movie> movieFound = movieRepository.findByName(name);
+
+        if (movieFound.isPresent())
+            throw new MovieAlreadyRegisteredException(name);
     }
 }
