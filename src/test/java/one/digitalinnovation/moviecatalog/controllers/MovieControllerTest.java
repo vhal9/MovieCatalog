@@ -83,4 +83,40 @@ public class MovieControllerTest {
 
     }
 
+    @Test
+    void whenGETIsCalledWidhAValidNameThenReturnAMovie() throws Exception {
+
+        //given
+        MovieDTO movieDTO = MovieDTOBuilder.builder().build().toMovieDTO();
+
+        //when
+        when(movieService.findByName(movieDTO.getName())).thenReturn(movieDTO);
+
+        //then
+        mockMvc.perform(get(MOVIE_API_URL_PATH + "/" + movieDTO.getName())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(movieDTO)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.name", is(movieDTO.getName())))
+                .andExpect(jsonPath("$.rate", is(movieDTO.getRate())))
+                .andExpect(jsonPath("$.releaseDate", is(movieDTO.getReleaseDate())));
+
+    }
+
+    @Test
+    void whenGETIsCalledWithoutRegisteredNameThenNotFoundStatusReturned() throws Exception {
+
+        //given
+        MovieDTO movieDTO = MovieDTOBuilder.builder().build().toMovieDTO();
+
+        //when
+        when(movieService.findByName(movieDTO.getName())).thenThrow(MovieNotFoundException.class);
+
+        //then
+        mockMvc.perform(get(MOVIE_API_URL_PATH + "/" + movieDTO.getName())
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound());
+
+    }
+
 }
