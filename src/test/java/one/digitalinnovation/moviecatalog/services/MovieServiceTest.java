@@ -14,6 +14,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -97,6 +99,37 @@ public class MovieServiceTest {
 
         // then
         assertThrows(MovieNotFoudException.class, () -> movieService.findByName(expectedFoundMovieDTO.getName()));
+
+    }
+
+    @Test
+    void whenListMovieIsCalledThenReturnAListOfMovies() {
+
+        // given
+        MovieDTO expectedFoundMovieDTO = MovieDTOBuilder.builder().build().toMovieDTO();
+        Movie expectedFoundMovie = movieMapper.toModel(expectedFoundMovieDTO);
+
+        //when
+        when(movieRepository.findAll()).thenReturn(Collections.singletonList(expectedFoundMovie));
+
+        //then
+        List<MovieDTO> foundListMovieDTO = movieService.listMovies();
+
+        assertThat(foundListMovieDTO, is(not(empty())));
+        assertThat(foundListMovieDTO.get(0), is(equalTo(expectedFoundMovieDTO)));
+
+    }
+
+    @Test
+    void whenListMovieIsCalledThenReturnAEmptyListOfMovies() {
+
+        //when
+        when(movieRepository.findAll()).thenReturn(Collections.emptyList());
+
+        //then
+        List<MovieDTO> foundListMovieDTO = movieService.listMovies();
+
+        assertThat(foundListMovieDTO, is(empty()));
 
     }
 
